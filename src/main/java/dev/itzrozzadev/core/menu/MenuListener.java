@@ -70,6 +70,7 @@ public class MenuListener implements Listener {
 					? clickedInventory.getType() == InventoryType.CHEST
 					? MenuClickLocation.MENU : MenuClickLocation.PLAYER_INVENTORY : MenuClickLocation.OUTSIDE;
 			final ClickType clickType = event.getClick();
+
 			final boolean allowed = menu.isActionAllowed(whereClicked, slot, slotItem, cursor, action);
 			if (action.toString().contains("PICKUP") || action.toString().contains("PLACE") || action.toString().equals("SWAP_WITH_CURSOR") || action == InventoryAction.CLONE_STACK || clickType.isShiftClick() || clickType == ClickType.MIDDLE || clickType == ClickType.DROP) {
 				try {

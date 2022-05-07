@@ -1,11 +1,17 @@
 package dev.itzrozzadev.core.text;
 
+import dev.itzrozzadev.core.entity.EntityUtil;
+import dev.itzrozzadev.core.messages.Messenger;
+import dev.itzrozzadev.core.number.Number;
 import dev.itzrozzadev.core.version.MinecraftVersion;
 import lombok.experimental.UtilityClass;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -99,7 +105,110 @@ public class Text {
 		return text;
 	}
 
-	public String formatUnderscores(final String name) {
+	public static <T> String join(final T[] array) {
+		return array == null ? "null" : join(Arrays.asList(array));
+	}
+
+	public static <T> String join(final Iterable<T> array) {
+		return array == null ? "null" : join(array, ", ");
+	}
+
+	public static <T> String join(final T[] array, final String delimiter) {
+		return join(array, delimiter, object -> object == null ? "" : simplify(object));
+	}
+
+	public static <T> String join(final Iterable<T> array, final String delimiter) {
+		return join(array, delimiter, object -> object == null ? "" : simplify(object));
+	}
+
+
+	public static <T> String join(final T[] array, final Stringer<T> stringer) {
+		return join(array, ", ", stringer);
+	}
+
+	public static <T> String join(final T[] array, final String delimiter, final Stringer<T> stringer) {
+		if(array == null) {
+			Messenger.log("(!) Array is null");
+			return "null";
+		};
+
+		return join(Arrays.asList(array), delimiter, stringer);
+	}
+
+
+	public static <T> String join(final Iterable<T> array, final Stringer<T> stringer) {
+		return join(array, ", ", stringer);
+	}
+
+	public static <T> String join(final Iterable<T> array, final String delimiter, final Stringer<T> stringer) {
+		final Iterator<T> it = array.iterator();
+		StringBuilder message = new StringBuilder();
+
+		while (it.hasNext()) {
+			final T next = it.next();
+
+			if (next != null)
+				message.append(stringer.toString(next)).append(it.hasNext() ? delimiter : "");
+		}
+
+		return message.toString();
+	}
+
+	public static String simplify(Object arg) {
+		if (arg instanceof Entity)
+			return EntityUtil.getName((Entity) arg);
+
+		else if (arg instanceof CommandSender)
+			return ((CommandSender) arg).getName();
+
+		else if (arg instanceof World)
+			return ((World) arg).getName();
+
+		else if (arg instanceof Location)
+			return shortLocation((Location) arg);
+
+		else if (arg.getClass() == double.class || arg.getClass() == float.class)
+			return Number.formatTwoDecimalPlaces((double) arg);
+
+		else if (arg instanceof Collection)
+			return Text.join((Collection<?>) arg, ", ", Text::simplify);
+
+		else if (arg instanceof ChatColor)
+			return ((Enum<?>) arg).name().toLowerCase();
+
+		else if (arg instanceof TextColor)
+			return ((TextColor) arg).getName();
+
+		else if (arg instanceof Enum)
+			return ((Enum<?>) arg).toString().toLowerCase();
+
+		try {
+			if (arg instanceof net.md_5.bungee.api.ChatColor)
+				return ((net.md_5.bungee.api.ChatColor) arg).getName();
+		} catch (final Exception ignored) {
+
+		}
+
+		return arg.toString();
+	}
+
+	public static String shortLocation(final Location loc) {
+		if (loc == null)
+			return "Location(null)";
+
+		if(loc.getWorld() == null) return "Location(null, " + loc.getX() + ", " + loc.getY() + ", " + loc.getZ() + ")";
+
+		return Replacer.replace("{world} [{x}, {y}, {z}]",
+				"world", loc.getWorld().getName(),
+				"x", ""+loc.getBlockX(),
+				"y", ""+loc.getBlockY(),
+				"z", ""+loc.getBlockZ());
+	}
+	public interface Stringer<T> {
+		String toString(T object);
+	}
+
+	public String formatLowercaseRemoveUnderscores(final String name) {
 		return name.toLowerCase().replace("_", " ");
 	}
 

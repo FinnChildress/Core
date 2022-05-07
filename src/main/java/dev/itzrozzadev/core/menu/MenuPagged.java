@@ -12,13 +12,12 @@ public abstract class MenuPagged<T> extends Menu {
 
 	private int currentPage = 1;
 	private final Map<Integer, List<T>> pages = new HashMap<>();
+	@Setter
 	private int manualSize;
 
 	private final int autoSize;
-	@Setter
-	private int nextButtonSlot;
-	@Setter
-	private int previousButtonSlot;
+	private final int nextButtonSlot;
+	private final int previousButtonSlot;
 
 	@Setter
 	private ItemStack nextButtonItem = new Item(Material.ARROW).name("&aNext Page").create();
@@ -33,7 +32,7 @@ public abstract class MenuPagged<T> extends Menu {
 
 	public MenuPagged(final List<T> items) {
 		final int length = getItemAmount(items);
-		this.autoSize = length <= 9 ? 9 : length <= 18 ? 18 : length <= 27 ? 27 : length <= 36 ? 36 : 45;
+		this.autoSize = manualSize != 0 ? manualSize : length <= 9 ? 9 : length <= 18 ? 18 : length <= 27 ? 27 : length <= 36 ? 36 : 45;
 		setSize(this.autoSize + 9);
 		this.nextButtonSlot = getSize() - 1;
 		this.previousButtonSlot = getSize() - 9;

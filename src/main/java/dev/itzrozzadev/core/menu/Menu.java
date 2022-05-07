@@ -71,7 +71,6 @@ public abstract class Menu implements IMenu {
 
 	private void buildInventory() {
 		menuInventory = new MenuInventory(title, size);
-
 		final Map<Integer, ItemStack> items = compileItems();
 		addItems(items);
 		addPredefinedButtons();

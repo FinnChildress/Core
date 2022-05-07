@@ -142,15 +142,20 @@ public abstract class BaseCommand extends Command {
 				if (!checkPerm(getPermission())) return false;
 			if (args.length < getMinArguments() || autoHandleHelp && args.length == 1 && (getHelpLabel().contains(args[0].toLowerCase()))) {
 				Task.runLaterAsync(() -> {
-					final String usage = getMultilineUsageMessage() != null ? String.join("\n", getMultilineUsageMessage()) : getUsage() != null ? getUsage() : null;
-					final String description = getDescription() != null ? getDescription() : null;
+					if(getMultilineHelpMessage() == null){
+						final String usage =  getUsage().length() > 0  ? getUsage() : null;
+						final String description = getDescription().length() > 0 ? getDescription() : null;
 
-					Messenger.send(sender, Replacer.replace(getHelpMessage(),
-							"label", getLabel(),
-							"usage", usage,
-							"description", description,
-							"permission", "&f" + (sender.isOp() ? getPermission() != null ? " &8- &f" + getPermission() : " &8- &f" + getDefaultPermission() : "")
-					));
+						Messenger.send(sender, Replacer.replace(getHelpMessage(),
+								"label", getLabel(),
+								"usage", usage,
+								"description", description,
+								"permission", "&f" + (sender.isOp() ? getPermission() != null ? " &8- &f" + getPermission() : " &8- &f" + getDefaultPermission() : "")
+						));
+					}else {
+						Messenger.send(sender, getMultilineHelpMessage());
+					}
+
 				});
 				return true;
 			}
@@ -192,7 +197,7 @@ public abstract class BaseCommand extends Command {
 		return null;
 	}
 
-	protected String[] getMultilineUsageMessage() {
+	protected String[] getMultilineHelpMessage() {
 		return null;
 	}
 

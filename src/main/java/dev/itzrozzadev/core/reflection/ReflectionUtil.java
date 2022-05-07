@@ -2,7 +2,9 @@ package dev.itzrozzadev.core.reflection;
 
 import dev.itzrozzadev.core.exception.BaseException;
 import dev.itzrozzadev.core.exception.ReflectionException;
+import dev.itzrozzadev.core.text.Text;
 import dev.itzrozzadev.core.version.MinecraftVersion;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 
 import java.lang.reflect.Constructor;
@@ -104,6 +106,29 @@ public final class ReflectionUtil {
 			throw new ReflectionException("Could not get field " + field.getName() + " in instance " + (instance != null ? instance : field).getClass().getSimpleName());
 		}
 	}
+
+	public static Constructor<?> getConstructor(@NonNull final String classPath, final Class<?>... params) {
+		final Class<?> clazz = lookupClass(classPath);
+
+		return getConstructor(clazz, params);
+	}
+
+	public static Constructor<?> getConstructor(@NonNull final Class<?> clazz, final Class<?>... params) {
+		try {
+			if (reflectionDataCache.containsKey(clazz))
+				return reflectionDataCache.get(clazz).getConstructor(params);
+
+			final Constructor<?> constructor = clazz.getConstructor(params);
+			constructor.setAccessible(true);
+
+			return constructor;
+
+		} catch (final ReflectiveOperationException ex) {
+			ex.printStackTrace();
+			throw new BaseException("Could not get constructor of " + clazz + " with parameters " + Arrays.toString(params));
+		}
+	}
+
 
 	private static final class ReflectionData<T> {
 		private final Class<T> clazz;
@@ -240,6 +265,42 @@ public final class ReflectionUtil {
 		}
 	}
 
+	public static boolean isClassAvailable(final String path) {
+		try {
+			if (classCache.containsKey(path))
+				return true;
+
+			Class.forName(path);
+
+			return true;
+
+		} catch (final Throwable t) {
+			return false;
+		}
+	}
+	public static <T> T instantiate(final String classPath) {
+		final Class<T> clazz = lookupClass(classPath);
+
+		return instantiate(clazz);
+	}
+	public static <T> T instantiate(final Class<T> clazz) {
+		try {
+			final Constructor<T> constructor;
+
+			if (reflectionDataCache.containsKey(clazz))
+				constructor = ((ReflectionData<T>) reflectionDataCache.get(clazz)).getDeclaredConstructor();
+
+			else
+				constructor = clazz.getDeclaredConstructor();
+
+			constructor.setAccessible(true);
+
+			return constructor.newInstance();
+
+		} catch (final ReflectiveOperationException ex) {
+			throw new ReflectionException(ex, "Could not make instance of: " + clazz);
+		}
+	}
 	public static <T> T instantiate(final Constructor<T> constructor, final Object... params) {
 		try {
 			return constructor.newInstance(params);

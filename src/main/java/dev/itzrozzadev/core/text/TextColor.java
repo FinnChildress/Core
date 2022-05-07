@@ -251,7 +251,7 @@ public final class TextColor {
 	 * @return
 	 */
 	public String toEscapedString() {
-		return isHex() ? toString + "\\" + getName() : Text.formatUnderscores(getName());
+		return isHex() ? toString + "\\" + getName() : Text.formatLowercaseRemoveUnderscores(getName());
 	}
 
 	/**

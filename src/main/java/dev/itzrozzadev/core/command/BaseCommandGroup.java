@@ -5,6 +5,7 @@ import dev.itzrozzadev.core.task.Task;
 import dev.itzrozzadev.core.text.Replacer;
 import dev.itzrozzadev.core.text.Text;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
@@ -24,6 +25,9 @@ public abstract class BaseCommandGroup {
 
 	@Getter
 	protected CommandSender sender;
+
+	@Setter
+	private boolean sendHelpOnNoArgs = true;
 
 	protected abstract void registerSubCommands();
 
@@ -109,6 +113,11 @@ public abstract class BaseCommandGroup {
 			}
 	}
 
+	protected void onNoArgs(final CommandSender sender) {
+
+
+	}
+
 
 	public final class MainCommand extends BaseCommand {
 
@@ -122,7 +131,10 @@ public abstract class BaseCommandGroup {
 		protected void onCommand() {
 			BaseCommandGroup.this.sender = this.sender;
 			if (args.length == 0) {
-				sendSubCommandHelp();
+				if(sendHelpOnNoArgs)
+					sendSubCommandHelp();
+				else
+					onNoArgs(sender);
 				return;
 			}
 

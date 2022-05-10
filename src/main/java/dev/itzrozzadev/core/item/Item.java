@@ -34,7 +34,7 @@ public class Item {
 			assert meta != null;
 			this.name = meta.hasDisplayName() ? meta.getDisplayName() : null;
 			this.lore = meta.hasLore() ? meta.getLore() : null;
-			this.enchants = meta.hasEnchants() ? meta.getEnchants() : null;
+			this.enchants = meta.hasEnchants() ? meta.getEnchants() : new HashMap<>();
 		}
 	}
 

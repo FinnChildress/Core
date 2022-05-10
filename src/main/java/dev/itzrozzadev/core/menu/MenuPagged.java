@@ -16,8 +16,12 @@ public abstract class MenuPagged<T> extends Menu {
 	private int manualSize;
 
 	private final int autoSize;
-	private final int nextButtonSlot;
-	private final int previousButtonSlot;
+
+	@Setter
+	private  int nextButtonSlot;
+
+	@Setter
+	private int previousButtonSlot;
 
 	@Setter
 	private ItemStack nextButtonItem = new Item(Material.ARROW).name("&aNext Page").create();

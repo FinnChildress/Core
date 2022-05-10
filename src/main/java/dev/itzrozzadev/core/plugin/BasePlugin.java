@@ -3,7 +3,7 @@ package dev.itzrozzadev.core.plugin;
 import dev.itzrozzadev.core.command.BaseCommand;
 import dev.itzrozzadev.core.command.BaseCommandGroup;
 import dev.itzrozzadev.core.command.CommandRegistry;
-import dev.itzrozzadev.core.event.EventRegistry;
+import dev.itzrozzadev.core.event.EventController;
 import dev.itzrozzadev.core.menu.MenuListener;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -104,7 +104,7 @@ public abstract class BasePlugin extends JavaPlugin {
 	}
 
 	protected final void registerEvents(final Listener listener) {
-		EventRegistry.registerEvent(listener);
+		EventController.registerEvent(listener);
 	}
 
 	protected final void registerCommand(final Command command) {

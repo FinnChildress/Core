@@ -134,6 +134,8 @@ public abstract class Menu implements IMenu {
 
 		compileItems().forEach(inventory::setItem);
 
+		predefinedButtons.forEach((slot, button) -> inventory.setItem(slot, button.getItem()));
+
 		this.getViewer().updateInventory();
 	}
 

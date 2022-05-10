@@ -1,9 +1,11 @@
 package dev.itzrozzadev.core.menu;
 
-import dev.itzrozzadev.core.event.EventRegistry;
+import dev.itzrozzadev.core.event.EventController;
 import dev.itzrozzadev.core.menu.button.Button;
 import dev.itzrozzadev.core.messages.Messenger;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -20,14 +22,14 @@ public class MenuListener implements Listener {
 		try {
 			Class.forName("org.bukkit.event.player.PlayerSwapHandItemsEvent");
 
-			EventRegistry.registerEvent(new OffHandListener());
+			EventController.registerEvent(new OffHandListener());
 		} catch (final Throwable ignored) {
 
 		}
 
 		try {
 			Class.forName("org.bukkit.event.inventory.InventoryDragEvent");
-			EventRegistry.registerEvent(new DragListener());
+			EventController.registerEvent(new DragListener());
 		} catch (final Throwable ignored) {
 
 		}
@@ -92,6 +94,14 @@ public class MenuListener implements Listener {
 			if (!allowed) {
 				event.setCancelled(true);
 				player.updateInventory();
+			}
+			else if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY || whereClicked != MenuClickLocation.PLAYER_INVENTORY) {
+				event.setResult(Event.Result.DENY);
+				player.updateInventory();
+
+				// Spigot bug
+				if (player.getGameMode() == GameMode.CREATIVE && event.getClick().toString().equals("SWAP_OFFHAND"))
+					player.getInventory().setItemInOffHand(null);
 			}
 		}
 	}

@@ -8,11 +8,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class BaseCommandGroup {
 
@@ -190,7 +192,6 @@ public abstract class BaseCommandGroup {
 				}
 			});
 		}
-
 		@Override
 		public List<String> tabComplete() {
 			if (args.length == 1)
@@ -206,20 +207,10 @@ public abstract class BaseCommandGroup {
 			return null;
 		}
 
+
 		private List<String> tabCompleteSubcommands(final CommandSender sender, String param) {
 			param = param.toLowerCase();
-
-			final List<String> tab = new ArrayList<>();
-
-			for (final BaseSubCommand subcommand : subCommands) {
-				if (hasPerm(subcommand.getPermission()))
-					for (final String label : subcommand.getSubLabels())
-						if (!label.trim().isEmpty() && label.startsWith(param))
-							tab.add(label);
-
-				return tab;
-			}
-			return new ArrayList<>();
+			return StringUtil.copyPartialMatches(param, subCommands.stream().map(BaseSubCommand::getSubLabel).collect(Collectors.toList()), new ArrayList<>());
 		}
 
 		private BaseSubCommand getSubcommand(final String label) {
@@ -232,5 +223,7 @@ public abstract class BaseCommandGroup {
 
 			return null;
 		}
+
 	}
+
 }

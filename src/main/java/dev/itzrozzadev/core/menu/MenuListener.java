@@ -94,7 +94,7 @@ public class MenuListener implements Listener {
 					event.setCancelled(true);
 					player.updateInventory();
 				}
-			} else if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY || whereClicked != MenuClickLocation.PLAYER_INVENTORY) {
+			} else if ((action == InventoryAction.MOVE_TO_OTHER_INVENTORY || whereClicked != MenuClickLocation.PLAYER_INVENTORY) && !allowed) {
 				event.setResult(Event.Result.DENY);
 				player.updateInventory();
 

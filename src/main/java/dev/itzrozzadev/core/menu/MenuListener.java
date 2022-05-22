@@ -83,19 +83,16 @@ public class MenuListener implements Listener {
 						menu.onButtonClick(button, click);
 					else
 						menu.onMenuClick(click);
-
 				} catch (final Throwable t) {
 					player.closeInventory();
 					t.printStackTrace();
 					Messenger.sendError(player, "An error occurred while handling the click");
-
 				}
-			}
-			if (!allowed) {
-				event.setCancelled(true);
-				player.updateInventory();
-			}
-			else if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY || whereClicked != MenuClickLocation.PLAYER_INVENTORY) {
+				if (!allowed) {
+					event.setCancelled(true);
+					player.updateInventory();
+				}
+			} else if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY || whereClicked != MenuClickLocation.PLAYER_INVENTORY) {
 				event.setResult(Event.Result.DENY);
 				player.updateInventory();
 

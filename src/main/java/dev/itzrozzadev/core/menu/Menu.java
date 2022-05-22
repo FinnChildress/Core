@@ -140,10 +140,14 @@ public abstract class Menu implements IMenu {
 	}
 
 	protected void handleClose(final Inventory inventory) {
+		onMenuClose(inventory);
 		this.viewer.removeMetadata(MenuMetadata.CURRENT_MENU.getKey(), BasePlugin.getInstance());
 		this.viewer.setMetadata(MenuMetadata.LAST_CLOSED_MENU.getKey(), new FixedMetadataValue(BasePlugin.getInstance(), this));
 	}
 
+	protected void onMenuClose(Inventory inventory){
+
+	}
 	protected boolean isActionAllowed(final MenuClickLocation location, final int slot, @Nullable final ItemStack clicked, @Nullable final ItemStack cursor, final InventoryAction action) {
 		return false;
 	}

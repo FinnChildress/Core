@@ -75,18 +75,20 @@ public class MenuListener implements Listener {
 
 			final boolean allowed = menu.isActionAllowed(whereClicked, slot, slotItem, cursor, action);
 			if (action.toString().contains("PICKUP") || action.toString().contains("PLACE") || action.toString().equals("SWAP_WITH_CURSOR") || action == InventoryAction.CLONE_STACK || clickType.isShiftClick() || clickType == ClickType.MIDDLE || clickType == ClickType.DROP) {
-				try {
-					final Button button = menu.getButton(slot);
-					final MenuClick click = new MenuClick(player, menu, slot, clickType);
+				if (whereClicked == MenuClickLocation.MENU) {
+					try {
+						final Button button = menu.getButton(slot);
+						final MenuClick click = new MenuClick(player, menu, slot, clickType);
 
-					if (button != null)
-						menu.onButtonClick(button, click);
-					else
-						menu.onMenuClick(click);
-				} catch (final Throwable t) {
-					player.closeInventory();
-					t.printStackTrace();
-					Messenger.sendError(player, "An error occurred while handling the click");
+						if (button != null)
+							menu.onButtonClick(button, click);
+						else
+							menu.onMenuClick(click);
+					} catch (final Throwable t) {
+						player.closeInventory();
+						t.printStackTrace();
+						Messenger.sendError(player, "An error occurred while handling the click");
+					}
 				}
 				if (!allowed) {
 					event.setCancelled(true);

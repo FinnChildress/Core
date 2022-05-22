@@ -66,11 +66,8 @@ public class MenuListener implements Listener {
 			final ItemStack slotItem = event.getCurrentItem();
 			final ItemStack cursor = event.getCursor();
 			final InventoryAction action = event.getAction();
-			final InventoryView view = event.getView();
-			final Inventory clickedInventory = slot < 0 ? null : view.getTopInventory() != null && slot < view.getTopInventory().getSize() ? view.getTopInventory() : view.getBottomInventory();
-			final MenuClickLocation whereClicked = clickedInventory != null
-					? clickedInventory.getType() == InventoryType.CHEST
-					? MenuClickLocation.MENU : MenuClickLocation.PLAYER_INVENTORY : MenuClickLocation.OUTSIDE;
+			final Inventory clickedInventory = getClickedInventory(event);
+			final MenuClickLocation whereClicked = clickedInventory != null ? clickedInventory.getType() == InventoryType.CHEST ? MenuClickLocation.MENU : MenuClickLocation.PLAYER_INVENTORY : MenuClickLocation.OUTSIDE;
 			final ClickType clickType = event.getClick();
 
 			final boolean allowed = menu.isActionAllowed(whereClicked, slot, slotItem, cursor, action);
@@ -144,4 +141,10 @@ public class MenuListener implements Listener {
 		}
 	}
 
+	private Inventory getClickedInventory(final InventoryClickEvent event) {
+		final int slot = event.getRawSlot();
+		final InventoryView view = event.getView();
+
+		return slot < 0 ? null : view.getTopInventory() != null && slot < view.getTopInventory().getSize() ? view.getTopInventory() : view.getBottomInventory();
+	}
 }

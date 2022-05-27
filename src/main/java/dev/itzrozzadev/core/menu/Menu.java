@@ -114,7 +114,7 @@ public abstract class Menu implements IMenu {
 		Task.runLater(1, () -> {
 			buildInventory();
 			menuInventory.open(player);
-			
+
 			player.setMetadata(MenuMetadata.CURRENT_MENU.getKey(), new FixedMetadataValue(BasePlugin.getInstance(), this));
 		});
 	}
@@ -129,7 +129,7 @@ public abstract class Menu implements IMenu {
 
 	}
 
-	protected void restartMenu() {
+	public void restartMenu() {
 		final Inventory inventory = getViewer().getOpenInventory().getTopInventory();
 
 		compileItems().forEach(inventory::setItem);
@@ -145,9 +145,10 @@ public abstract class Menu implements IMenu {
 		this.viewer.setMetadata(MenuMetadata.LAST_CLOSED_MENU.getKey(), new FixedMetadataValue(BasePlugin.getInstance(), this));
 	}
 
-	protected void onMenuClose(Inventory inventory){
+	protected void onMenuClose(Inventory inventory) {
 
 	}
+
 	protected boolean isActionAllowed(final MenuClickLocation location, final int slot, @Nullable final ItemStack clicked, @Nullable final ItemStack cursor, final InventoryAction action) {
 		return false;
 	}

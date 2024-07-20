@@ -12,7 +12,9 @@ public final class MinecraftVersion {
 	private static V current;
 
 	public enum V {
-		v1_19(19, false),
+		v1_21(21),
+		v1_20(20),
+		v1_19(19),
 		v1_18(18),
 		v1_17(17),
 		v1_16(16),
